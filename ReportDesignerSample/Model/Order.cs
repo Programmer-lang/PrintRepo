@@ -20,5 +20,7 @@ namespace ReportDesignerSample
 
         [StringLength(50)]
         public string Description { get; set; }
+
+        public virtual Employe Employe { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ReportDesignerSample
     public partial class Model1 : DbContext
     {
         public Model1()
-            : base("name=Model1")
+            : base("name=Model11")
         {
         }
 
@@ -24,6 +24,15 @@ namespace ReportDesignerSample
             modelBuilder.Entity<Employe>()
                 .Property(e => e.LastName)
                 .IsUnicode(false);
+
+            //modelBuilder.Entity<Employe>()
+            //    .HasOptional(e => e.Employes1)
+            //    .WithRequired(e => e.Employe1);
+
+            modelBuilder.Entity<Employe>()
+                .HasMany(e => e.Orders)
+                .WithRequired(e => e.Employe)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Order>()
                 .Property(e => e.Description)
