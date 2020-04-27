@@ -12,12 +12,26 @@ using DevExpress.DataAccess.ConnectionParameters;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.IO;
 
 namespace ReportDesignerSample.ViewModels
 {
     [POCOViewModel]
     public class ViewModel1
     {
+
+       public XtraReport MyReport1;
+
+        public  ViewModel1() 
+        {
+
+            MyReport1 = new XtraReport();
+        }
+
+      
+
+        #region Print Report
+
 
         //public void Print()
 
@@ -60,22 +74,21 @@ namespace ReportDesignerSample.ViewModels
             try
             {
 
-                XtraReport report = new XtraReport()
-                {
-                    Name = "PrintMyData",
-                    DisplayName = "Recent Apps",
-                    PaperKind = PaperKind.Letter,
-                    Margins = new Margins(100, 100, 100, 100)
-                };
 
 
-                BindToData(report);
-                CreateReportHeader(report, "Print Data");
-                CreateDetail(report);
-                CreateDetailReport(report);
+                MyReport1.Name = "PrintMyData";
+                MyReport1.DisplayName = "Recent Apps";
+                MyReport1.PaperKind = PaperKind.Letter;
+                MyReport1.Margins = new Margins(100, 100, 100, 100);
+
+
+                BindToData(MyReport1);
+                CreateReportHeader(MyReport1, "Print Data");
+                CreateDetail(MyReport1);
+                CreateDetailReport(MyReport1);
 
                 MyReport MyReport = new MyReport();
-                MyReport.ReportDesigner.OpenDocument(report);
+                MyReport.ReportDesigner.OpenDocument(MyReport1);
                 MyReport.Show();
 
             }
@@ -83,7 +96,6 @@ namespace ReportDesignerSample.ViewModels
             {
 
                 MessageBox.Show(ex.InnerException.Message);
-
             }
         }
 
@@ -367,5 +379,50 @@ namespace ReportDesignerSample.ViewModels
             XtraReport report = table.RootReport;
             table.WidthF = report.PageWidth - report.Margins.Left - report.Margins.Right;
         }
+
+        #endregion
+
+        #region Save Report
+        public void Save() 
+        {
+            // Save the report to a stream.
+            MemoryStream stream = new MemoryStream();
+            MyReport1.SaveLayout(stream);
+
+            // Prepare the stream for reading.
+            stream.Position = 0;
+
+            // Insert the report to a database.
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                Model1 MyContext = new Model1();
+                
+                string s = sr.ReadToEnd();
+                MyContext.Reports.Add(new Report() {Id = 1 , Report1 = s });
+                MyContext.SaveChanges();
+            }
+        }
+
+        public void Load() 
+        {
+
+            XtraReport newReport;
+            Model1 MyContext = new Model1();
+
+            Report Report1 = MyContext.Reports.Find(1);
+
+            using (StreamWriter sw = new StreamWriter(new MemoryStream()))
+            {
+                sw.Write(Report1.Report1);
+                sw.Flush();
+                newReport = XtraReport.FromStream(sw.BaseStream, true); ;
+
+            }
+
+            // Preview the report.
+            newReport.ShowPreview();
+        }
+
+        #endregion
     }
 }

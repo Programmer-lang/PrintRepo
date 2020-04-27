@@ -6,18 +6,32 @@
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:ViewModels="clr-namespace:ReportDesignerSample.ViewModels"
              mc:Ignorable="d"
              DataContext="{dxmvvm:ViewModelSource Type=ViewModels:ViewModel1}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid Background="Azure">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Grid.Row="1" Height="100" Width="200"  Content="Print" Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="1" Grid.Column="0" Height="100" Width="200"  Content="Print" Background="LightGray">
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand Command="{Binding PrintCommand}" EventName="Click"/>
             </dxmvvm:Interaction.Behaviors>
-            
+        </Button>
+        <Button Grid.Row="1" Grid.Column="1" Height="100" Width="200"  Content="Save" Background="LightGray">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand Command="{Binding SaveCommand}" EventName="Click"/>
+            </dxmvvm:Interaction.Behaviors>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="2" Height="100" Width="200"  Content="Load" Background="LightGray">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand Command="{Binding LoadCommand}" EventName="Click"/>
+            </dxmvvm:Interaction.Behaviors>
         </Button>
     </Grid>
 </UserControl>
