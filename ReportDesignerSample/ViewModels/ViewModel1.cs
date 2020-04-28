@@ -72,8 +72,6 @@ namespace ReportDesignerSample.ViewModels
             try
             {
 
-
-
                 MyReport1.Name = "PrintMyData";
                 MyReport1.DisplayName = "Recent Apps";
                 MyReport1.PaperKind = PaperKind.Letter;
@@ -293,11 +291,12 @@ namespace ReportDesignerSample.ViewModels
             DetailReportBand detailReportBand = new DetailReportBand();
             report.Bands.Add(detailReportBand);
             detailReportBand.DataSource = report.DataSource;
-           detailReportBand.DataMember = "Orders";
-          
+            detailReportBand.DataMember = "Orders";
+            detailReportBand.ReportPrintOptions.PrintOnEmptyDataSource = false; 
+       
 
-            // Add a header to the detail report.
-            ReportHeaderBand detailReportHeader = new ReportHeaderBand();
+              // Add a header to the detail report.
+              ReportHeaderBand detailReportHeader = new ReportHeaderBand();
             detailReportBand.Bands.Add(detailReportHeader);
 
             XRTable tableHeader = new XRTable();
