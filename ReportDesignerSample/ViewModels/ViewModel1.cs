@@ -28,8 +28,6 @@ namespace ReportDesignerSample.ViewModels
             MyReport1 = new XtraReport();
         }
 
-      
-
         #region Print Report
 
 
@@ -403,7 +401,12 @@ namespace ReportDesignerSample.ViewModels
             }
         }
 
-        public void Load() 
+
+        #endregion
+
+        #region Load Report
+
+        public void Load()
         {
 
             XtraReport newReport;
@@ -419,10 +422,13 @@ namespace ReportDesignerSample.ViewModels
 
             }
 
-            // Preview the report.
-            newReport.ShowPreview();
+
+            ReportPrintTool pt = new ReportPrintTool(newReport);
+            pt.ShowPreviewDialog();
+
         }
 
         #endregion
+
     }
 }
