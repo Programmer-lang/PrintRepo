@@ -8,10 +8,11 @@ namespace ReportDesignerSample
     public partial class Model1 : DbContext
     {
         public Model1()
-            : base("name=Model14")
+            : base("name=Model15")
         {
         }
 
+       // public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<Employe> Employes { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
@@ -26,7 +27,6 @@ namespace ReportDesignerSample
                 .Property(e => e.LastName)
                 .IsUnicode(false);
 
-
             modelBuilder.Entity<Employe>()
                 .HasMany(e => e.Orders)
                 .WithRequired(e => e.Employe)
@@ -38,6 +38,10 @@ namespace ReportDesignerSample
 
             modelBuilder.Entity<Report>()
                 .Property(e => e.Notes)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Report>()
+                .Property(e => e.ReportName)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Order>()

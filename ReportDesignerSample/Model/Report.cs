@@ -16,5 +16,8 @@ namespace ReportDesignerSample
 
         [StringLength(50)]
         public string Notes { get; set; }
+
+        [StringLength(50)]
+        public string ReportName { get; set; }
     }
 }

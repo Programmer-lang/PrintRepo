@@ -20,9 +20,9 @@ namespace ReportDesignerSample.ViewModels
     public class ViewModel1
     {
 
-       public XtraReport MyReport1;
+        public XtraReport MyReport1;
 
-        public  ViewModel1() 
+        public ViewModel1()
         {
 
             MyReport1 = new XtraReport();
@@ -71,6 +71,7 @@ namespace ReportDesignerSample.ViewModels
 
             try
             {
+                ReportDesignTool MyReportDesignTool = new ReportDesignTool(MyReport1);
 
                 MyReport1.Name = "PrintMyData";
                 MyReport1.DisplayName = "Recent Apps";
@@ -83,9 +84,11 @@ namespace ReportDesignerSample.ViewModels
                 CreateDetail(MyReport1);
                 CreateDetailReport(MyReport1);
 
-                MyReport MyReport = new MyReport();
-                MyReport.ReportDesigner.OpenDocument(MyReport1);
-                MyReport.Show();
+                //MyReport MyReport = new MyReport();
+                //MyReport.ReportDesigner.OpenDocument(MyReport1);
+                //MyReport.Show();
+
+                MyReportDesignTool.ShowRibbonDesignerDialog();
 
             }
             catch (Exception ex)
@@ -130,14 +133,14 @@ namespace ReportDesignerSample.ViewModels
             Model1 MyContext = new Model1();
 
             var MyList1 = MyContext.Employes.ToList();
-           
+
             MyList = new ObservableCollection<Employe>(MyList1);
 
             string ConnectionString = MyContext.Database.Connection.ConnectionString;
             CustomStringConnectionParameters connectionParameters = new CustomStringConnectionParameters(ConnectionString);
 
             report.DataSource = MyList;
-            
+
         }
 
         public void CreateReportHeader(XtraReport report, string caption)
@@ -207,7 +210,7 @@ namespace ReportDesignerSample.ViewModels
         //    report.Bands.Add(detailReportBand);
         //    detailReportBand.DataSource = report.DataSource;
         //    detailReportBand.DataMember = DataMember;
-          
+
         //    // Add a header to the detail report.
         //    ReportHeaderBand detailReportHeader = new ReportHeaderBand();
         //    detailReportBand.Bands.Add(detailReportHeader);
@@ -279,24 +282,24 @@ namespace ReportDesignerSample.ViewModels
         //    tableDetail.EvenStyleName = evenStyle.Name;
         //}
 
-         
-    
-        
+
+
+
         // Collection
         public void CreateDetailReport(XtraReport report)
         {
 
             SqlDataSource ds = report.DataSource as SqlDataSource;
-          
+
             DetailReportBand detailReportBand = new DetailReportBand();
             report.Bands.Add(detailReportBand);
             detailReportBand.DataSource = report.DataSource;
             detailReportBand.DataMember = "Orders";
-            detailReportBand.ReportPrintOptions.PrintOnEmptyDataSource = false; 
-       
+            detailReportBand.ReportPrintOptions.PrintOnEmptyDataSource = false;
 
-              // Add a header to the detail report.
-              ReportHeaderBand detailReportHeader = new ReportHeaderBand();
+
+            // Add a header to the detail report.
+            ReportHeaderBand detailReportHeader = new ReportHeaderBand();
             detailReportBand.Bands.Add(detailReportHeader);
 
             XRTable tableHeader = new XRTable();
@@ -380,7 +383,7 @@ namespace ReportDesignerSample.ViewModels
         #endregion
 
         #region Save Report
-        public void Save() 
+        public void Save()
         {
             // Save the report to a stream.
             MemoryStream stream = new MemoryStream();
@@ -393,9 +396,9 @@ namespace ReportDesignerSample.ViewModels
             using (StreamReader sr = new StreamReader(stream))
             {
                 Model1 MyContext = new Model1();
-                
+
                 string s = sr.ReadToEnd();
-                MyContext.Reports.Add(new Report() {Id = 1 , Report1 = s });
+                MyContext.Reports.Add(new Report() { Id = 1, Report1 = s });
                 MyContext.SaveChanges();
             }
         }
