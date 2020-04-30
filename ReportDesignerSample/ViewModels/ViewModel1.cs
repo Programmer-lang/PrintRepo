@@ -21,11 +21,11 @@ namespace ReportDesignerSample.ViewModels
     {
 
         public XtraReport MyReport1;
+        private const string strReportName = "MyCompany";
 
         public ViewModel1()
         {
 
-            MyReport1 = new XtraReport();
         }
 
         #region Print Report
@@ -71,7 +71,10 @@ namespace ReportDesignerSample.ViewModels
 
             try
             {
-                ReportDesignTool MyReportDesignTool = new ReportDesignTool(MyReport1);
+
+                MyReport1 = new XtraReport();
+
+              //  ReportDesignTool MyReportDesignTool = new ReportDesignTool(MyReport1);
 
                 MyReport1.Name = "PrintMyData";
                 MyReport1.DisplayName = "Recent Apps";
@@ -84,11 +87,9 @@ namespace ReportDesignerSample.ViewModels
                 CreateDetail(MyReport1);
                 CreateDetailReport(MyReport1);
 
-                //MyReport MyReport = new MyReport();
-                //MyReport.ReportDesigner.OpenDocument(MyReport1);
-                //MyReport.Show();
+                MyReport1.ShowRibbonDesignerDialog();
 
-                MyReportDesignTool.ShowRibbonDesignerDialog();
+        //   MyReportDesignTool.ShowRibbonDesignerDialog();
 
             }
             catch (Exception ex)
@@ -397,39 +398,72 @@ namespace ReportDesignerSample.ViewModels
             {
                 Model1 MyContext = new Model1();
 
+               int id = GetMaxId(MyContext) + 1;
+
                 string s = sr.ReadToEnd();
-                MyContext.Reports.Add(new Report() { Id = 1, Report1 = s });
+                MyContext.Reports.Add(new Report() { Id = id, Report1 = s , ReportName = strReportName });
                 MyContext.SaveChanges();
             }
         }
 
+        public int GetMaxId(Model1 context)
+        {
 
+            int id   = context.Database.SqlQuery<int>("SELECT MAX(Id) FROM Reports").FirstOrDefault();
+
+            return id;
+
+
+            //int id = context.Reports.Max(x => x.Id);
+
+            //return id;
+
+        }
         #endregion
+
+
 
         #region Load Report
 
         public void Load()
         {
 
-            XtraReport newReport;
             Model1 MyContext = new Model1();
 
-            Report Report1 = MyContext.Reports.Find(1);
+            //  Report Report1 = MyContext.Reports.Find(1);
 
-            using (StreamWriter sw = new StreamWriter(new MemoryStream()))
+            Report Report1 = MyContext.Reports.Where<Report>(x => x.ReportName == strReportName).FirstOrDefault<Report>();
+
+            if (Report1 == null)
             {
-                sw.Write(Report1.Report1);
-                sw.Flush();
-                newReport = XtraReport.FromStream(sw.BaseStream, true); ;
+                MyReport1 = null;
+                Print();
 
             }
-
-
-            ReportPrintTool pt = new ReportPrintTool(newReport);
-            pt.ShowPreviewDialog();
+            else
+            {
+                LoadReport(Report1);
+            }
 
         }
 
+
+        public void LoadReport(Report report) 
+        {
+            XtraReport newReport;
+
+            using (StreamWriter sw = new StreamWriter(new MemoryStream()))
+            {
+                sw.Write(report.Report1);
+                sw.Flush();
+
+                newReport = XtraReport.FromStream(sw.BaseStream, true);
+                newReport.ShowRibbonDesignerDialog();
+
+                //ReportPrintTool pt = new ReportPrintTool(newReport);
+                //pt.ShowPreviewDialog();
+            }
+        }
         #endregion
 
     }
